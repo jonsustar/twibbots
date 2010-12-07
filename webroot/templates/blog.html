@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Twibbots: Blog
+{% endblock %}
+
+{% block sidebar %}
+
+{% endblock %}
+
+{% block content %}
+    <h2>Blog</h2>
+    {% if posts.object_list %}
+    {% for post in posts.object_list %}
+        {% include "post_fragment.html" %}   
+    {% endfor %}
+    {% else %}
+    <p>No blog posts.</p>
+    {% endif %}
+    <div id=paging>
+        <p class=paging_buttons>
+            
+            {% if posts.has_previous %}
+                <a href="/blog/">|&lt;</a>
+                <a href="/blog/{{ posts.previous_page_number }}">&lt;</a>
+            {% endif %}
+            
+            <span class=current_page>{{ posts.number }}</span> / <span class=total_pages>{{ posts.paginator.num_pages }}</span>
+            
+            {% if posts.has_next %}
+                <a href="/blog/{{ posts.next_page_number }}">&gt;</a>
+                <a href="/blog/{{ posts.paginator.num_pages }}">&gt;|</a>
+            {% endif %}
+            
+        </p>
+    </div>
+{% endblock %}

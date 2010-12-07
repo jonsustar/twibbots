@@ -1,0 +1,9 @@
+<div class=post>
+    <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+    <div class=details>
+	    <p class=author>by <a href="mailto:{{ post.author.email }}">{{ post.author.first_name }} {{ post.author.last_name }}</a></p>
+	    <p class=date>posted on {{ post.published_at|date:"F j, Y" }}</p>
+	    <p class=clearboth></p>
+    </div>
+    {{ post.get_processed_content|safe }}
+</div>        

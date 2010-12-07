@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Twibbots: Bots
+{% endblock %}
+
+{% block sidebar %}
+
+{% endblock %}
+
+{% block content %}
+    <h2>Twitter Bots</h2>
+    <p>The Twitter bots currently alive and well are listed below. As new ones are designed, assembled, and attached to the big internet machine, we will be sure to inform the rest of humanity.</p>
+    {% for bot in active_bots %}
+        <div class=bot>
+            <h3><a href="{{ bot.get_absolute_url }}">{{ bot.name }}</a></h3>
+            <p>{{ bot.description }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

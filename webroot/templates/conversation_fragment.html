@@ -1,0 +1,25 @@
+<div class=conversation>
+    {% for tweet in conversation.tweets %}
+    <div class="tweet{% if tweet.user.isBot %} bot_tweet {{ tweet.user.screen_name }}_background{% endif %}">
+        <div class="links">
+            <p>
+                <a target="_blank" title="Retweet this tweet on Twitter" href="{{ tweet.getRetweetUrl }}" class=retweet></a>
+                <a target="_blank" title="View this tweet on Twitter" href="{{ tweet.getTwitterUrl }}" class=twitter></a>
+            </p>
+        </div>
+        <p class="tweet">
+                <span class=tweet_author>
+                    {% if tweet.user.isBot %}
+                        <a href="/{{ tweet.user.screen_name.lower }}"/>{{tweet.user.screen_name}}</a>:
+                    {% else %}
+                        {{ tweet.user.screen_name }}:
+                    {% endif %}
+                </span>
+                <span class=tweet_text>{{ tweet.getFormattedText|safe }}</span>
+        </p>
+    </div>
+    {% endfor %}
+    <div class="conversation_info">
+        <p><a href="{{ conversation.get_absolute_url }}">#{{ conversation.id }}</a></p>
+    </div>
+</div>        

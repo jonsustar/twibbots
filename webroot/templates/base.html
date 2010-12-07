@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <meta name="description" content="Twibbots is a Twitter Bot army, aimed at better robot-human relations. While other sites keep their bots as slaves, we try to be friends. Because when the metal ones come, who will speak for us?" >
+        <meta name="keywords" content="twitter bots, twibbots, spelling, weather, advice, opinions" >
+        <title>{% if title %} {{ title }} {% else %}Twibbots: Twitter Bots with an attitude{% endif %}</title>
+        {% block rss %}
+            {% ifequal current_bot_name "All" %}
+                <link rel="alternate" type="application/rss+xml" title="RSS" href="/feeds/all/{% ifequal filter "interesting" %}interesting/{% endifequal %}">
+            {% else %}
+                <link rel="alternate" type="application/rss+xml" title="RSS" href="/feeds/bots/{{current_bot_name.lower}}/{%ifequal filter "interesting" %}interesting/{% endifequal %}">
+            {% endifequal %}
+        {% endblock %}
+        <link href="/css/base.css" rel="stylesheet" type="text/css" /> 
+        <style type="text/css">
+        {% for bot in active_bots %}
+            div#content div.{{ bot.name }}_background
+            {
+                background: {{ bot.background_color }};
+                color: {{ bot.foreground_color }};
+                !important;
+            }
+            div#sidebar a.{{ bot.name }}_navigation:hover, div#sidebar a.{{ bot.name }}_selected
+            {
+                border-color: {{ bot.foreground_color }};
+                background: {{ bot.background_color }};
+            }
+        {% endfor %}
+        </style>
+    </head>
+    <body>
+        <div id=wrapper>
+            <div id=header>
+                {% block navigation %}
+                <div id=navigation>
+                    <p>
+                        <a href="/">Home</a>
+                        <a href="/blog">Blog</a>
+                        <a href="/bots">Bots</a>
+                        <a href="/about">About</a>
+                        <a href="/contact">Contact</a>
+                    </p>
+                </div>
+                {% endblock %}
+                <h1 title="{% if title %} {{ title }} {% else %}Twibbots: Twitter Bots with an attitude{% endif %}"><a href="/" title="{% if title %} {{ title }} {% else %}Twibbots: Twitter Bots with an attitude{% endif %}">
+                    <img title="{% if title %} {{ title }} {% else %}Twibbots: Twitter Bots with an attitude{% endif %}" src="/img/header.gif"/>
+                </a></h1>
+            </div>
+            <div id=content>
+                {% block breadcrumbs %}
+                    {% if breadcrumbs %}
+                        <p id=breadcrumbs>
+                        {% for crumb_name, crumb_link in breadcrumbs %}
+                            {% if forloop.last %}    
+                                 <span class=current>{{ crumb_name }}</span>
+                            {% else %}
+                                 <a href="{{ crumb_link }}">{{ crumb_name }}</a> &#62;
+                            {% endif %}
+                        {% endfor %}
+                        </p>
+                    {% endif %}
+                {% endblock %}
+                {% block content %}{% endblock %}
+            </div>
+            <div id=sidebar>
+                {% block sidebar %}
+                <div class=section>
+	                <h3 class=header>Available Bots</h3>
+	                <h3><a title="Show tweets from all Twitter bots" href="/" {% ifequal current_bot_name "All" %} class="selected"{% endifequal %}
+	                />All</a></h3>
+	                {% for bot in active_bots %}
+	                   <h3><a title="Show only tweets from the Twitter bot '{{ bot.name }}'" href="/{{ bot.name.lower }}" class="{{ bot.name }}_navigation {% ifequal current_bot_name  bot.name %}selected {{ bot.name }}_selected{% endifequal %}"/>{{  bot.name }}</a></h3>
+	                {% endfor %}
+                </div>
+                <div class=section>
+                    <h3 class=header>Filters</h3>
+                    <script type="text/javascript">
+                    function selectInteresting()
+                    {
+                        document.filter_form.filter.value="interesting";
+                        document.filter_form.submit();
+                    }
+                    function selectAll() {
+                        document.filter_form.filter.value="all";
+                        document.filter_form.submit();
+                    }
+                    </script>
+                    <form method="post" action="" name="filter_form">
+                    <input name="filter" type="hidden" {% ifnotequal filter "interesting" %} value="all" {% else %} value="{{ filter }}" {% endifnotequal %} >
+                    <h3><a title="Show all tweets" href="javascript:selectAll();" {% ifnotequal filter "interesting" %}class="selected"{% endifnotequal %}>All</a></h3>
+                    <h3><a title="Show only tweets that have been responded to by a person" href="javascript:selectInteresting();" {% ifequal filter "interesting" %}class="selected"{% endifequal %}>More Interesting</a></h3>
+                    </form>
+                </div>
+                {% endblock %}
+                
+            </div>
+            <p class=clearboth></p>
+            <div id=footer>
+                {% block footer %}
+                <p>This website was created using <a href="http://www.djangoproject.com/">Django</a>. And robots.</p>
+                {% endblock %}
+            </div>
+        </div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-84218-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+    </body>
+</html>

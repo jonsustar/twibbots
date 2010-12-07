@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% ifequal current_bot_name "All" %}
+        Twibbots
+    {% else %}
+        Twibbots: {{ current_bot_name }}
+    {% endifequal %}
+{% endblock %}
+
+{% block content %}
+                {% for conversation in conversations.object_list %}
+                    {% include "conversation_fragment.html" %}   
+                {% empty %}
+                    <p>No conversations.</p>
+                {% endfor %}
+                <div id=paging>
+			        <p class=paging_buttons>
+			            
+			            {% if conversations.has_previous %}
+			                <a href="/">|&lt;</a>
+			                <a href="/{{ conversations.previous_page_number }}">&lt;</a>
+			            {% endif %}
+			            <span class=current_page>{{ conversations.number }}</span> / <span class=total_pages>{{ conversations.paginator.num_pages }}</span>
+			            {% if conversations.has_next %}
+			                <a href="/{{ conversations.next_page_number }}">&gt;</a>
+			                <a href="/{{ conversations.paginator.num_pages }}">&gt;|</a>
+			            {% endif %}
+			            
+			        </p>
+                </div>
+{% endblock %}
