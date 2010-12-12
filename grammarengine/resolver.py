@@ -3,32 +3,24 @@ from datetime import datetime
 import sys, sqlite3, os.path, logging, string, urllib, random, math, types, operator
 import re
 
-class Rule(models.Model):
-    start = models.CharField(max_length=100)
-    end = models.CharField(max_length=500)
-    last_used_date = models.DateTimeField(blank=True,null=True)
-
-    def __unicode__(self):
-        return self.start + "|" + self.end
-        
-    def mark(self):
-        if not self.id is not None:
-            self.last_used_date = datetime.now()
-            self.save()
-        
-    def unmark(self):
-        if self.id is not None:
-            self.last_used_date = None
-            self.save()
-    
 class Resolver():
     extra_rules = []
+    bot_name = None
     
     def __init__(self, extra_rules=[]):
         self.extra_rules = extra_rules
         
+    def get_bot_model(self):
+        instance_name = "twibbots.bots." + self.bot_name + ".models"
+        instance_import = __import__(instance_name)
+        instance = sys.modules[instance_name]
+        return instance
+        
+    def get_new_rule(self):
+        return self.get_bot_model().Rule()
+        
     def add_temporary_rule(self, start, end):
-        r = Rule()
+        r = self.get_new_rule()
         r.start = start
         r.end = end
         self.extra_rules.append(r)
@@ -53,8 +45,8 @@ class Resolver():
         oldest_rule = None
         rule_end = ''
 
-        all_rules = Rule.objects.filter(start=rule_start)
-        used_rules = Rule.objects.filter(start=rule_start).exclude(last_used_date=None)
+        all_rules = self.get_bot_model().Rule.objects.filter(start=rule_start)
+        used_rules = self.get_bot_model().Rule.objects.filter(start=rule_start).exclude(last_used_date=None)
 
         for used_rule in used_rules:
             if type(used_rule.last_used_date) is types.UnicodeType:
@@ -70,7 +62,7 @@ class Resolver():
         if oldest_rule != None and used_total == queue_size:
             oldest_rule.unmark()
 
-        free_rules = list(Rule.objects.filter(start=rule_start,last_used_date=None))
+        free_rules = list(self.get_bot_model().Rule.objects.filter(start=rule_start,last_used_date=None))
         
         for extra_rule in self.extra_rules:
             if extra_rule.start == rule_start:

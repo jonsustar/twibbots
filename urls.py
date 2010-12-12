@@ -14,5 +14,5 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
     
-    url(r'^resolve/', 'twibbots.grammarengine.views.resolve', name='resolve_view'),
+    url(r'^resolve/', 'twibbots.bots.conciseadvice.views.resolve', name='resolve_view'),
 )

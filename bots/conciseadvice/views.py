@@ -1,4 +1,5 @@
-from twibbots.grammarengine.models import *
+from twibbots.bots.conciseadvice.models import *
+from twibbots.grammarengine.resolver import Resolver
 from django.template import Context, loader
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.conf import settings
@@ -13,9 +14,9 @@ def resolve(request):
     
     tests = []
     
-    name_rule = Rule(start='<TEST>',end='Jon!!!!!!!!!!!!!!!!')
+    b = Bot()
     
-    r = Resolver()
+    r = b.get_resolver()
     r.add_temporary_rule('<TEST>','<GREETING> <NAME>!')
     r.add_temporary_rule('<NAME>','Jon')
     r.add_temporary_rule('<NAME>','Joe')
