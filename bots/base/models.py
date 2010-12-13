@@ -13,6 +13,8 @@ class BaseBot():
         
     def publish_tweet(self, tweet):
         print "published tweet"
+        
+    
 
 class BaseRule(models.Model):
     start = models.CharField(max_length=100)
